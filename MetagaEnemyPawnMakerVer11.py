@@ -205,7 +205,7 @@ class GuardianData():
             print("long_weapon_num = " + str(long_got_weapon_num))
             weapon = create_weapon_mgr.create_weapon(self.level)
             weapon_weapon_type = weapon.weapon_type
-            if "白兵" in weapon_var and weapon_weapon_type == "白兵" and main_weapon_short_flg == False:
+            if short_got_weapon_num < short_weapon_num_int and "白兵" in weapon_var and weapon_weapon_type == "白兵" and main_weapon_short_flg == False:
                 self.outfits_main_weapon_shortname = weapon.weapon_name
                 self.outfits_main_weapon_shortattack = weapon.element + "+" + str(weapon.attack)
                 self.outfits_main_weapon_shortrange = str(weapon.min_range) + "-" + str(weapon.max_range)
@@ -214,7 +214,7 @@ class GuardianData():
                 main_weapon_short_flg = True
                 print("白兵")
 
-            elif "白兵" in weapon_var and weapon_weapon_type == "白兵" and main_weapon_short_flg == True and sub_weapon_short_flg == False:
+            elif short_got_weapon_num < short_weapon_num_int and "白兵" in weapon_var and weapon_weapon_type == "白兵" and main_weapon_short_flg == True and sub_weapon_short_flg == False:
                 self.outfits_sub_weapon_shortname = weapon.weapon_name
                 self.outfits_sub_weapon_shortattack = weapon.element + "+" + str(weapon.attack)
                 self.outfits_sub_weapon_shortrange = str(weapon.min_range) + "-" + str(weapon.max_range)
@@ -223,7 +223,7 @@ class GuardianData():
                 sub_weapon_short_flg = True
                 print("白兵")
 
-            elif "射撃" in weapon_var and weapon_weapon_type == "射撃" and main_weapon_short_flg == False:
+            elif short_got_weapon_num < short_weapon_num_int and "射撃" in weapon_var and weapon_weapon_type == "射撃" and main_weapon_short_flg == False:
                 self.outfits_main_weapon_shortname = weapon.weapon_name
                 self.outfits_main_weapon_shortattack = weapon.element + "+" + str(weapon.attack)
                 self.outfits_main_weapon_shortrange = str(weapon.min_range) + "-" + str(weapon.max_range)
@@ -232,7 +232,7 @@ class GuardianData():
                 main_weapon_short_flg = True
                 print("射撃")
 
-            elif "射撃" in weapon_var and weapon_weapon_type == "射撃" and main_weapon_short_flg == True and sub_weapon_short_flg == False:
+            elif short_got_weapon_num < short_weapon_num_int and "射撃" in weapon_var and weapon_weapon_type == "射撃" and main_weapon_short_flg == True and sub_weapon_short_flg == False:
                 self.outfits_sub_weapon_shortname = weapon.weapon_name
                 self.outfits_sub_weapon_shortattack = weapon.element + "+" + str(weapon.attack)
                 self.outfits_sub_weapon_shortrange = str(weapon.min_range) + "-" + str(weapon.max_range)
@@ -241,7 +241,7 @@ class GuardianData():
                 sub_weapon_short_flg = True
                 print("射撃")
 
-            elif "砲撃" in weapon_var and weapon_weapon_type == "砲撃" and main_weapon_long_flg == False:
+            elif long_got_weapon_num < long_weapon_num_int and "砲撃" in weapon_var and weapon_weapon_type == "砲撃" and main_weapon_long_flg == False:
                 self.outfits_main_weapon_longname = weapon.weapon_name
                 self.outfits_main_weapon_longattack = weapon.element + "+" + str(weapon.attack)
                 self.outfits_main_weapon_longrange = str(weapon.min_range) + "-" + str(weapon.max_range)
@@ -250,7 +250,7 @@ class GuardianData():
                 main_weapon_long_flg = True
                 print("砲撃")
 
-            elif "砲撃" in weapon_var and weapon_weapon_type == "砲撃" and main_weapon_long_flg == True and sub_weapon_long_flg == False:
+            elif long_got_weapon_num < long_weapon_num_int and "砲撃" in weapon_var and weapon_weapon_type == "砲撃" and main_weapon_long_flg == True and sub_weapon_long_flg == False:
                 self.outfits_sub_weapon_longname = weapon.weapon_name
                 self.outfits_sub_weapon_longattack = weapon.element + "+" + str(weapon.attack)
                 self.outfits_sub_weapon_longrange = str(weapon.min_range) + "-" + str(weapon.max_range)

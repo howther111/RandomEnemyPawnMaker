@@ -212,7 +212,7 @@ class GuardianData():
             print("long_weapon_num = " + str(long_got_weapon_num))
             weapon = create_weapon_al.create_weapon(self.level)
             weapon_weapon_type = weapon.weapon_type
-            if "白兵" in weapon_var and weapon_weapon_type == "白兵" and main_weapon_short_flg == False:
+            if short_got_weapon_num < short_weapon_num_int and "白兵" in weapon_var and weapon_weapon_type == "白兵" and main_weapon_short_flg == False:
                 self.outfits_rightname = weapon.weapon_name
                 self.outfits_rightattack = weapon.element + "+" + str(weapon.attack)
                 self.outfits_rightrange = str(weapon.min_range) + "-" + str(weapon.max_range)
@@ -221,7 +221,7 @@ class GuardianData():
                 main_weapon_short_flg = True
                 print("白兵")
 
-            elif "白兵" in weapon_var and weapon_weapon_type == "白兵" and main_weapon_short_flg == True and sub_weapon_short_flg == False:
+            elif short_got_weapon_num < short_weapon_num_int and "白兵" in weapon_var and weapon_weapon_type == "白兵" and main_weapon_short_flg == True and sub_weapon_short_flg == False:
                 self.outfits_leftname = weapon.weapon_name
                 self.outfits_leftattack = weapon.element + "+" + str(weapon.attack)
                 self.outfits_leftrange = str(weapon.min_range) + "-" + str(weapon.max_range)
@@ -230,7 +230,7 @@ class GuardianData():
                 sub_weapon_short_flg = True
                 print("白兵")
 
-            elif "射撃" in weapon_var and weapon_weapon_type == "射撃" and main_weapon_short_flg == False:
+            elif short_got_weapon_num < short_weapon_num_int and "射撃" in weapon_var and weapon_weapon_type == "射撃" and main_weapon_short_flg == False:
                 self.outfits_rightname = weapon.weapon_name
                 self.outfits_rightattack = weapon.element + "+" + str(weapon.attack)
                 self.outfits_rightrange = str(weapon.min_range) + "-" + str(weapon.max_range)
@@ -239,7 +239,7 @@ class GuardianData():
                 main_weapon_short_flg = True
                 print("射撃")
 
-            elif "射撃" in weapon_var and weapon_weapon_type == "射撃" and main_weapon_short_flg == True and sub_weapon_short_flg == False:
+            elif short_got_weapon_num < short_weapon_num_int and "射撃" in weapon_var and weapon_weapon_type == "射撃" and main_weapon_short_flg == True and sub_weapon_short_flg == False:
                 self.outfits_leftname = weapon.weapon_name
                 self.outfits_leftattack = weapon.element + "+" + str(weapon.attack)
                 self.outfits_leftrange = str(weapon.min_range) + "-" + str(weapon.max_range)
@@ -248,7 +248,7 @@ class GuardianData():
                 sub_weapon_short_flg = True
                 print("射撃")
 
-            elif "魔導" in weapon_var and weapon_weapon_type == "魔導" and main_weapon_long_flg == False:
+            elif long_got_weapon_num < long_weapon_num_int and "魔導" in weapon_var and weapon_weapon_type == "魔導" and main_weapon_long_flg == False:
                 self.outfits_magicrightname = weapon.weapon_name
                 self.outfits_magicrightattack = weapon.element + "+" + str(weapon.attack)
                 self.outfits_magicrightrange = str(weapon.min_range) + "-" + str(weapon.max_range)
@@ -257,7 +257,7 @@ class GuardianData():
                 main_weapon_long_flg = True
                 print("魔導")
 
-            elif "魔導" in weapon_var and weapon_weapon_type == "魔導" and main_weapon_long_flg == True and sub_weapon_long_flg == False:
+            elif long_got_weapon_num < long_weapon_num_int and "魔導" in weapon_var and weapon_weapon_type == "魔導" and main_weapon_long_flg == True and sub_weapon_long_flg == False:
                 self.outfits_magicleftname = weapon.weapon_name
                 self.outfits_magicleftattack = weapon.element + "+" + str(weapon.attack)
                 self.outfits_magicleftrange = str(weapon.min_range) + "-" + str(weapon.max_range)

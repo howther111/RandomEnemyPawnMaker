@@ -303,8 +303,9 @@ class GuardianData():
                "【砲撃】" + str(self.outfits_total_magic) + \
                "【防壁】" + str(self.outfits_total_countermagic) + \
                "【行動】" + str(self.outfits_total_action) + \
-               "\n【HP】" + str(self.outfits_total_fp) + \
-               "【MP】" + str(self.outfits_total_mp) + \
+               "\n【FP】" + str(self.outfits_total_fp) + \
+               "【HP】" + str(self.outfits_total_hp) + \
+               "【EN】" + str(self.outfits_total_mp) + \
                "【移動力】" + str(self.outfits_total_battlespeed_total)
 
         text = text + "\n加護:"

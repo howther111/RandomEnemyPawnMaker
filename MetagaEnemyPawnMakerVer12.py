@@ -107,7 +107,7 @@ class GuardianData():
                    short_weapon_num="2", long_weapon_num="2"):
         self.guardian_type = guardian_type
         self.guardian_class = guardian_class
-        self.url = "https://elaunomitsugi.booth.pm/items/6432109"
+        self.url = "https://elaunomitsugi.booth.pm/items/7242378"
 
         if guardian_class == "奈落獣":
             self.character_name = "奈落獣" + CreatePilotName.CreatePilotName()

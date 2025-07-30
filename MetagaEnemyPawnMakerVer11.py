@@ -191,7 +191,7 @@ class GuardianData():
         main_weapon_long_flg = False
         sub_weapon_long_flg = False
         short_weapon_num_int = int(short_weapon_num)
-        long_weapon_num_int = int(short_weapon_num)
+        long_weapon_num_int = int(long_weapon_num)
         short_got_weapon_num = 0
         long_got_weapon_num = 0
         print(weapon_var)
@@ -856,6 +856,10 @@ if __name__ == "__main__":
 
     for checkbox in checkBoxes:
         checkbox.select()
+
+    # ラベル
+    Static5 = tkinter.Label(frame9, text=u'近接武装の数')
+    Static5.pack()
 
     shortrnd = random.randint(0, 2)
     longrnd = random.randint(0, 2)

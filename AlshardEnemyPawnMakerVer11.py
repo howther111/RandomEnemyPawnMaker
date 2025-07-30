@@ -198,7 +198,7 @@ class GuardianData():
         main_weapon_long_flg = False
         sub_weapon_long_flg = False
         short_weapon_num_int = int(short_weapon_num)
-        long_weapon_num_int = int(short_weapon_num)
+        long_weapon_num_int = int(long_weapon_num)
         short_got_weapon_num = 0
         long_got_weapon_num = 0
         print(weapon_var)

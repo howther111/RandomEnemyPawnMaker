@@ -205,7 +205,7 @@ class GuardianData():
         maxloop = 1000
         loop = 0
 
-        while short_got_weapon_num < short_weapon_num_int and long_got_weapon_num < long_weapon_num_int and loop < maxloop:
+        while (short_got_weapon_num < short_weapon_num_int or long_got_weapon_num < long_weapon_num_int) and loop < maxloop:
             print("max_short_weapon_num = " + str(short_weapon_num_int))
             print("max_long_weapon_num = " + str(long_weapon_num_int))
             print("short_weapon_num = " + str(short_got_weapon_num))

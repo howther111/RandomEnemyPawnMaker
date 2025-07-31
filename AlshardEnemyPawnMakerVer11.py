@@ -551,6 +551,8 @@ class GuardianData():
         jsontext["data"]["status"][1]["value"] = self.outfits_total_mp
         jsontext["data"]["status"][1]["max"] = self.outfits_total_mp
 
+        '''
+
         jsontext["data"]["status"].append({})
         jsontext["data"]["status"][2]["label"] = "財産ポイント"
         jsontext["data"]["status"][2]["value"] = self.add_fortune_point
@@ -560,8 +562,10 @@ class GuardianData():
         jsontext["data"]["status"][3]["label"] = "ブレイク"
         jsontext["data"]["status"][3]["value"] = 1
         jsontext["data"]["status"][3]["max"] = 1
+        
+        '''
 
-        i = 4
+        i = 2
 
         for special in self.specials:
             jsontext["data"]["status"].append({})

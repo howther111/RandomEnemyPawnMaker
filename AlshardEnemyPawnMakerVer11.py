@@ -62,7 +62,7 @@ class GuardianData():
     outfits_total_hp = 0
     outfits_total_mp = 0
     outfits_total_attack = 0
-    outfits_total_battlespeed_total = ""
+    outfits_total_battlespeed_total = 0
 
     outfits_rightname = ""
     outfits_rightattack = ""
@@ -187,8 +187,7 @@ class GuardianData():
                                         (random.randint(self.level - 2, self.level) * 20) + (random.randint(1, 20) * 1))
         self.outfits_total_hp = max(10, (random.randint(self.level - 2, self.level) * 5) + (random.randint(1, 5) * 1))
         self.outfits_total_mp = max(10, (random.randint(self.level - 2, self.level) * 5) + (random.randint(1, 5) * 1))
-        self.outfits_total_battlespeed_total = max(5, 5 * int(2 + int((random.randint(0, self.level) * 0.3)) - int(
-            (random.randint(0, self.level) * 0.2)))) + random.randint(0, 4)
+        self.outfits_total_battlespeed_total = self.outfits_total_action + 5
         #self.outfits_total_battlespeed_total = self.outfits_total_battlespeed_total.replace("ﾏｽ", "")
 
         self.add_fortune_point = 0

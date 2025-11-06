@@ -686,6 +686,10 @@ class GuardianData():
         jsontext["data"]["params"][25]["label"] = "闇防御"
         jsontext["data"]["params"][25]["value"] = str(self.armourstotal_dark)
 
+        jsontext["data"]["params"].append({})
+        jsontext["data"]["params"][26]["label"] = "状態"
+        jsontext["data"]["params"][26]["value"] = "通常"
+
         outfits_rightattack_array = self.outfits_rightattack.split("+")
         outfits_leftattack_array = self.outfits_leftattack.split("+")
         outfits_magicrightattack_array = self.outfits_magicrightattack.split("+")

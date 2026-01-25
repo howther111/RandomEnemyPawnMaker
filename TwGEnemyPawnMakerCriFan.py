@@ -339,6 +339,8 @@ class GuardianData():
             text = text + special + "/"
         text = text[:-1]
 
+        text = text + "\n【ドロップ】" + str(self.drop_item)
+
         outfits_main_weapon_shorttargetm = self.outfits_main_weapon_shorttarget
         if self.outfits_main_weapon_shorttarget == "単体":
             pass
@@ -810,10 +812,10 @@ def get_data(level=3, guardian_type="ソロ", guardian_class="ミーレス（テ
         guardian.output_prompt_guardian(image_type="宇宙戦艦")
     elif guardian_class == "機械":
         guardian.output_prompt_guardian(image_type="機械モンスター")
-    elif guardian_class == "人間":
+    elif guardian_class == "人間" or guardian_class == "デイブレイカー" or guardian_class == "アビスデイブレイカー":
         guardian.output_prompt_guardian(image_type="人間")
     else:
-        guardian.output_prompt_guardian(image_type="モビルスーツ")
+        guardian.output_prompt_guardian(image_type="機械モンスター")
 
     #guardian.output_online_json_data()
 

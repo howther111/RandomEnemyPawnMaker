@@ -85,7 +85,7 @@ def create_weapon(level=3):
 
     print(df_weapon)
 
-    df_element = pd.read_csv('random_element.csv', header=0)
+    df_element = pd.read_csv('random_element_twg.csv', header=0)
     # <class 'pandas.core.frame.DataFrame'>
 
     print(df_element)

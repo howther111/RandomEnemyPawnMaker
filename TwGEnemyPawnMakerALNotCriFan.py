@@ -130,7 +130,7 @@ class GuardianData():
             self.drop_item = drop_list[random.randint(0, len(drop_list) - 1)]
         elif guardian_class == "機械":
             drop_list = ["ロボット", "武装車両", "ターレット", "メルカバ", "ヘリ", "マシンライフ"]
-            self.character_name = CreatePilotName.CreatePilotName() + "・" + CreatePilotName.CreatePilotName()
+            self.character_name = CreateMachineNumber.CreateMachineNumber() + " " + CreatePetName.CreatePetName()
             self.guardian_name = self.character_name
             self.drop_item = drop_list[random.randint(0, len(drop_list) - 1)]
         elif guardian_class == "モンスター":

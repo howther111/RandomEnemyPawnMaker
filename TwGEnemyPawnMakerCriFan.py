@@ -24,9 +24,9 @@ def createMultiCheckButton(baseFrame, nameList, checkBoxes, checkBoxVars):
 
 class GuardianData():
     size_list = ["S", "M", "M", "M", "L"]
-    special_list = ["時間墓標", "鋼化結線", "守護天使", "硝煙弾雨"
+    special_list = ["時間墓標", "鋼化結線", "守護天使", "硝煙弾雨", "雪華氷碧", "否定空間"
         , "金剛大日", "電脳無辺", "光輝王城", "生屍超越", "報仇雪恨", "因果歪曲", "鉄騎疾走"
-        , "必殺冥路", "起死回生", "破邪顕正"]
+        , "必殺冥路", "起死回生", "破邪顕正", "暗夜断罪", "散華一陣", "無法天地"]
     character_name = ""
     guardian_name = ""
     guardian_type = ""

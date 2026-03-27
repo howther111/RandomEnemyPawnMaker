@@ -54,4 +54,25 @@ def replace_enemy_name():
             )
             return
 
-    messagebox.show
+    messagebox.showinfo(
+        "完了",
+        f"検出した .txt ファイル数：{total_txt_files}\n"
+        f"置換が行われたファイル数：{replaced_files}"
+    )
+
+# --- GUI構築 ---
+root = tk.Tk()
+root.title("エネミー名一括変更ツール")
+root.geometry("420x220")
+
+tk.Label(root, text="変更する対象の文字列を入力してください：").pack(pady=5)
+old_entry = tk.Entry(root, width=45)
+old_entry.pack()
+
+tk.Label(root, text="変更後の文字列を入力してください：").pack(pady=5)
+new_entry = tk.Entry(root, width=45)
+new_entry.pack()
+
+tk.Button(root, text="置換実行", command=replace_enemy_name).pack(pady=15)
+
+root.mainloop()

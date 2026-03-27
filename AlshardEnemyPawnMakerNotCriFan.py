@@ -580,6 +580,18 @@ class GuardianData():
             jsontext["data"]["status"][i]["max"] = 1
             i = i + 1
 
+        jsontext["data"]["status"].append({})
+        jsontext["data"]["status"][i]["label"] = "クリティカル値"
+        jsontext["data"]["status"][i]["value"] = 12
+        jsontext["data"]["status"][i]["max"] = 13
+        i = i + 1
+
+        jsontext["data"]["status"].append({})
+        jsontext["data"]["status"][i]["label"] = "ファンブル値"
+        jsontext["data"]["status"][i]["value"] = 2
+        jsontext["data"]["status"][i]["max"] = 13
+        i = i + 1
+
         jsontext["data"]["params"] = []
 
         jsontext["data"]["params"].append({})
@@ -688,7 +700,7 @@ class GuardianData():
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][26]["label"] = "状態"
-        jsontext["data"]["params"][26]["value"] = "通常"
+        jsontext["data"]["params"][26]["value"] = ""
 
         outfits_rightattack_array = self.outfits_rightattack.split("+")
         outfits_leftattack_array = self.outfits_leftattack.split("+")
@@ -699,12 +711,14 @@ class GuardianData():
         jsontext["data"]["secret"] = "false"
         jsontext["data"]["invisible"] = "false"
         jsontext["data"]["hideStatus"] = "false"
-        commandtext = "//アクション\nムーブ:\nマイナー:\nメジャー:\n//リソース\n" + \
+        commandtext = "//アクション\nムーブ:\nマイナー:\nメジャー:\n\n//リソース\n" + \
                                        "C({HP}-YY)　残りHP\n" + \
                                        "C({EN}-YY)　残りEN\n\n" + \
-                                       "//防御、+0欄に修正を記入\nAL+{回避値}+0　近・回避\n" \
-                                       "AL+{抗魔値}+0　遠・抗魔\nC(XX-{}-0)　被ダメージ、{}内に防御属性3文字\n\n" \
-                                       "//攻撃、+0欄に修正を記入\nAL+{命中値}+0　近・命中\nAL+{魔導値}+0　遠・魔導\n"
+                                       "//防御、+0欄に修正を記入\n2d6+{回避値}+0　近・回避\n" + \
+                                       "2d6+{抗魔値}+0　遠・抗魔\n" + \
+                                       "C(XX-{}-0)　被ダメージ、{}内に防御属性3文字\n\n" + \
+                                       "//攻撃、+0欄に修正を記入\n2d6+{命中値}+0　近・命中\n" + \
+                                       "2d6+{魔導値}+0　遠・魔導\n"
 
         if self.outfits_rightname != "":
             commandtext = commandtext + "2d6+" + outfits_rightattack_array[1] + "+0　" + \
@@ -726,8 +740,12 @@ class GuardianData():
                                        "〈" + outfits_magicleftattack_array[0] + "〉" + \
                                        self.outfits_magicleftname + "ダメージ\n"
 
-        commandtext = commandtext + "\n//能力値判定\nAL+{体力B}  体力判定\nAL+{反射B}  反射判定\nAL+{知覚B}  " \
-                                       "知覚判定\nAL+{理知B}  理知判定\nAL+{意志B}  意志判定\nAL+{幸運B}  幸運判定"
+        commandtext = (commandtext + "\n//能力値判定\n2d6+{体力B}　体力判定\n" + \
+                                     "2d6+{反射B}　反射判定\n" + \
+                                     "2d6+{知覚B}　知覚判定\n" + \
+                                     "2d6+{理知B}　理知判定\n" + \
+                                     "2d6+{意志B}　意志判定\n" + \
+                                     "2d6+{幸運B}　幸運判定")
 
 
         jsontext["data"]["commands"] = commandtext

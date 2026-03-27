@@ -525,6 +525,7 @@ class GuardianData():
         jsontext["data"]["status"][2]["value"] = self.outfits_total_mp
         jsontext["data"]["status"][2]["max"] = self.outfits_total_mp
 
+        '''
         jsontext["data"]["status"].append({})
         jsontext["data"]["status"][3]["label"] = "財産ポイント"
         jsontext["data"]["status"][3]["value"] = self.add_fortune_point
@@ -534,8 +535,9 @@ class GuardianData():
         jsontext["data"]["status"][4]["label"] = "ブレイク"
         jsontext["data"]["status"][4]["value"] = 1
         jsontext["data"]["status"][4]["max"] = 1
+        '''
 
-        i = 5
+        i = 3
 
         for special in self.specials:
             jsontext["data"]["status"].append({})
@@ -571,11 +573,11 @@ class GuardianData():
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][1]["label"] = "反射基本値"
-        jsontext["data"]["params"][1]["value"] = str(self.sense_total)
+        jsontext["data"]["params"][1]["value"] = str(self.reflex_total)
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][2]["label"] = "知覚基本値"
-        jsontext["data"]["params"][2]["value"] = str(self.strong_total)
+        jsontext["data"]["params"][2]["value"] = str(self.sense_total)
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][3]["label"] = "理知基本値"
@@ -595,11 +597,11 @@ class GuardianData():
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][7]["label"] = "反射B"
-        jsontext["data"]["params"][7]["value"] = str(self.sense_bonus)
+        jsontext["data"]["params"][7]["value"] = str(self.reflex_bonus)
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][8]["label"] = "知覚B"
-        jsontext["data"]["params"][8]["value"] = str(self.strong_bonus)
+        jsontext["data"]["params"][8]["value"] = str(self.sense_bonus)
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][9]["label"] = "理知B"

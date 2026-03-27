@@ -1,42 +1,38 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
+import random
 import sys
 import tkinter
 import tkinter.messagebox
+import tkinter.ttk as ttk
 import time
 import json
-import random
 import CreateMachineNumber
 import CreatePetName
 import CreatePilotName
-import create_weapon_al
-import tkinter.ttk as ttk
+import create_weapon_twg
 
-### <チェックボタン生成用の関数を事前定義>
-### <チェックボタン生成用の関数を事前定義>
 def createMultiCheckButton(baseFrame, nameList, checkBoxes, checkBoxVars):
     for i, name in enumerate(nameList):
         checkBoxVars.append(tkinter.BooleanVar())
-        checkBoxVars[i].set(False)  # 初期値を明示的にcheckにしておく
+        checkBoxVars[i].set(True)  # 初期値を明示的にcheckにしておく
         checkBoxes.append(tkinter.Checkbutton(baseFrame, text=name, variable=checkBoxVars[i]))
         checkBoxes[i].pack(anchor=tkinter.W,pady=10)
     root.update()   # 描画の更新
     baseFrame.configure(height=checkBoxes[i].winfo_y()+checkBoxes[i].winfo_height()+20)   # baseFrameの大きさ調整　winfo_height()+20 : pady=20 equivalent
 
+
 class GuardianData():
     size_list = ["S", "M", "M", "M", "L"]
-    special_list = ["トール", "オーディン", "フツノミタマ", "タケミカヅチ"
-        , "ヘイムダル", "エーギル", "バルドル", "ヘル", "ニョルド", "ネルガル"
-        , "ミューズ", "スィン", "ティール", "ヘルモード", "マリーシ"]
+    special_list = ["時間墓標", "鋼化結線", "守護天使", "硝煙弾雨", "雪華氷碧", "否定空間"
+        , "金剛大日", "電脳無辺", "光輝王城", "生屍超越", "報仇雪恨", "因果歪曲", "鉄騎疾走"
+        , "必殺冥路", "起死回生", "破邪顕正", "暗夜断罪", "散華一陣", "無法天地"]
     character_name = ""
     guardian_name = ""
     guardian_type = ""
     guardian_type_list = ["モブ", "ソロ", "強敵"]
     guardian_class = ""
-    guardian_class_list = ["奈落獣", "艦船", "ミーレス（マシンザウルス）", "アビスミーレス（マシンザウルス）",
-                           "ガーディアン（マシンザウルス）", "アビスガーディアン（マシンザウルス）",
-                           "ミーレス（カバリエ）", "アビスミーレス（カバリエ）",
-                           "ガーディアン（カバリエ）", "アビスガーディアン（カバリエ）", "ドラゴン", "奈落の使徒"]
+    guardian_class_list = ["人間", "機械", "モンスター"]
     level = 0
     guardian_size = ""
     player_name = ""
@@ -58,35 +54,34 @@ class GuardianData():
     outfits_total_magic = 0
     outfits_total_countermagic = 0
     outfits_total_action = 0
-    outfits_total_fp = 0
     outfits_total_hp = 0
     outfits_total_mp = 0
     outfits_total_attack = 0
-    outfits_total_battlespeed_total = 0
+    outfits_total_battlespeed_total = ""
 
-    outfits_rightname = ""
-    outfits_rightattack = ""
-    outfits_rightrange = ""
-    outfits_rightstrong = "なし"
-    outfits_righttarget = ""
+    outfits_main_weapon_shortname = ""
+    outfits_main_weapon_shortattack = ""
+    outfits_main_weapon_shortrange = ""
+    outfits_main_weapon_shortstrong = "なし"
+    outfits_main_weapon_shorttarget = ""
 
-    outfits_leftname = ""
-    outfits_leftattack = ""
-    outfits_leftrange = ""
-    outfits_leftstrong = "なし"
-    outfits_lefttarget = ""
+    outfits_sub_weapon_shortname = ""
+    outfits_sub_weapon_shortattack = ""
+    outfits_sub_weapon_shortrange = ""
+    outfits_sub_weapon_shortstrong = "なし"
+    outfits_sub_weapon_shorttarget = ""
 
-    outfits_magicrightname = ""
-    outfits_magicrightattack = ""
-    outfits_magicrightrange = ""
-    outfits_magicrightstrong = "なし"
-    outfits_magicrighttarget = ""
+    outfits_main_weapon_longname = ""
+    outfits_main_weapon_longattack = ""
+    outfits_main_weapon_longrange = ""
+    outfits_main_weapon_longstrong = "なし"
+    outfits_main_weapon_longtarget = ""
 
-    outfits_magicleftname = ""
-    outfits_magicleftattack = ""
-    outfits_magicleftrange = ""
-    outfits_magicleftstrong = "なし"
-    outfits_magiclefttarget = ""
+    outfits_sub_weapon_longname = ""
+    outfits_sub_weapon_longattack = ""
+    outfits_sub_weapon_longrange = ""
+    outfits_sub_weapon_longstrong = "なし"
+    outfits_sub_weapon_longtarget = ""
 
     armourstotal_slash = 0
     armourstotal_pierce = 0
@@ -96,6 +91,12 @@ class GuardianData():
     armourstotal_thunder = 0
     armourstotal_light = 0
     armourstotal_dark = 0
+    armourstotal_electrical = 0
+    armourstotal_poison = 0
+    armourstotal_suffocation = 0
+    armourstotal_infect = 0
+
+    drop_item = ""
 
     items = []
     specials = []
@@ -104,34 +105,48 @@ class GuardianData():
 
     url = ""
 
-    def input_data(self, level=5, guardian_type="ソロ", guardian_class="ミーレス（カバリエ）",
-                   weapon_var=["白兵", "射撃", "魔導"], short_weapon_num="1", long_weapon_num="1"):
+    def input_data(self, level=5, guardian_type="ソロ", guardian_class="奈落獣", weapon_var=["白兵", "射撃", "電脳"],
+                   short_weapon_num="2", long_weapon_num="2"):
         self.guardian_type = guardian_type
         self.guardian_class = guardian_class
-        self.url = "https://elaunomitsugi.booth.pm/items/7242399"
+        self.url = "https://elaunomitsugi.booth.pm/items/7242378"
 
-        if "モンスター" in guardian_class:
-            self.character_name = "奈落獣" + CreatePilotName.CreatePilotName()
-            self.guardian_name = self.character_name
-        elif "ドラゴン" in guardian_class:
-            self.character_name = CreatePilotName.CreatePilotName() + "ドラゴン"
-            self.guardian_name = self.character_name
-        elif "ソルジャー" in guardian_class:
+        if guardian_class == "人間":
+            drop_list = ["コーポレイト", "バンデッド", "クリミナル", "ニンジャ"]
             self.character_name = CreatePilotName.CreatePilotName() + "・" + CreatePilotName.CreatePilotName()
             self.guardian_name = self.character_name
-        elif "ロボット" in guardian_class:
+            self.drop_item = drop_list[random.randint(0, len(drop_list) - 1)]
+        elif guardian_class == "デイブレイカー":
+            drop_list = ["コーポレイト", "バンデッド", "クリミナル", "ニンジャ"]
+            self.character_name = CreatePilotName.CreatePilotName() + "・" + CreatePilotName.CreatePilotName()
+            self.guardian_name = self.character_name
+            self.drop_item = drop_list[random.randint(0, len(drop_list) - 1)]
+        elif guardian_class == "アビスデイブレイカー":
+            drop_list = ["コーポレイト", "バンデッド", "クリミナル", "ニンジャ"]
+            self.character_name = CreatePilotName.CreatePilotName() + "・" + CreatePilotName.CreatePilotName()
+            self.guardian_name = self.character_name
+            self.drop_item = drop_list[random.randint(0, len(drop_list) - 1)]
+        elif guardian_class == "機械":
+            drop_list = ["ロボット", "武装車両", "ターレット", "メルカバ", "ヘリ", "マシンライフ"]
             self.character_name = CreateMachineNumber.CreateMachineNumber() + " " + CreatePetName.CreatePetName()
             self.guardian_name = self.character_name
+            self.drop_item = drop_list[random.randint(0, len(drop_list) - 1)]
+        elif guardian_class == "モンスター":
+            drop_list = ["ゾンビ", "ミュータント", "BM／飛竜科", "BM／巨爪科", "フィーンド"]
+            self.character_name = CreatePilotName.CreatePilotName()
+            self.guardian_name = self.character_name
+            self.drop_item = drop_list[random.randint(0, len(drop_list) - 1)]
         elif guardian_class == "艦船":
+            drop_list = ["ロボット", "武装車両", "ターレット", "メルカバ", "ヘリ", "マシンライフ"]
             ship_list = ["駆逐艦", "巡洋艦", "軽巡洋艦", "重巡洋艦", "戦艦", "空母", "強襲揚陸艦"]
-            self.character_name = CreatePilotName.CreatePilotName() + "・" + CreatePilotName.CreatePilotName()
-            self.guardian_name = ship_list[random.randint(0, len(ship_list) - 1)] + CreatePetName.CreatePetName()
-        elif guardian_class == "ミーレス（マシンザウルス）" or guardian_class == "ガーディアン（マシンザウルス）" or guardian_class == "アビスミーレス（マシンザウルス）"or guardian_class == "アビスガーディアン（マシンザウルス）":
-            self.character_name = CreatePilotName.CreatePilotName() + "・" + CreatePilotName.CreatePilotName()
-            self.guardian_name = "機械恐竜" + CreatePilotName.CreatePilotName()
+            self.character_name = ship_list[random.randint(0, len(ship_list) - 1)] + CreatePetName.CreatePetName()
+            self.guardian_name = self.character_name
+            self.drop_item = drop_list[random.randint(0, len(drop_list) - 1)]
         else:
+            drop_list = ["コーポレイト", "バンデッド", "クリミナル", "ニンジャ"]
             self.character_name = CreatePilotName.CreatePilotName() + "・" + CreatePilotName.CreatePilotName()
-            self.guardian_name = CreateMachineNumber.CreateMachineNumber() + " " + CreatePetName.CreatePetName()
+            self.guardian_name = self.character_name
+            self.drop_item = drop_list[random.randint(0, len(drop_list) - 1)]
 
         self.guardian_type = guardian_type
         self.level = level
@@ -154,10 +169,10 @@ class GuardianData():
         self.bllesing_bonus = int(self.bllesing_total / 3)
 
         special_num = 0
-        if "シャード" in guardian_class:
+        if guardian_class == "デイブレイカー":
             special_num = 3
-        elif "アビス" in guardian_class:
-            special_num = max(3, (random.randint(0, self.level) * 2) - random.randint(0, self.level))
+        elif guardian_class == "アビスデイブレイカー" :
+            special_num = max(0, (random.randint(0, self.level) * 2) - random.randint(0, self.level))
 
         if special_num > 0:
             self.specials.append(self.special_list[random.randint(0, len(self.special_list) - 1)])
@@ -177,17 +192,17 @@ class GuardianData():
                                                   (random.randint(0, self.level) * 2) - random.randint(0, self.level))
         self.outfits_total_action = 4 + max(0, (random.randint(0, self.level) * 2) - random.randint(0, self.level))
         if self.guardian_type == "モブ":
-            self.outfits_total_fp = max(10,
+            self.outfits_total_hp = max(10,
                                         (random.randint(self.level - 2, self.level) * 10) + (random.randint(1, 10) * 1))
         elif self.guardian_type == "ソロ":
-            self.outfits_total_fp = max(5,
+            self.outfits_total_hp = max(5,
                                         (random.randint(self.level - 2, self.level) * 7) + (random.randint(1, 7) * 1))
         elif self.guardian_type == "強敵":
-            self.outfits_total_fp = max(50,
+            self.outfits_total_hp = max(50,
                                         (random.randint(self.level - 2, self.level) * 20) + (random.randint(1, 20) * 1))
-        self.outfits_total_hp = max(10, (random.randint(self.level - 2, self.level) * 5) + (random.randint(1, 5) * 1))
         self.outfits_total_mp = max(10, (random.randint(self.level - 2, self.level) * 5) + (random.randint(1, 5) * 1))
-        self.outfits_total_battlespeed_total = self.outfits_total_action + 5
+        self.outfits_total_battlespeed_total = max(1, int(3 + int((random.randint(0, self.level) * 0.3)) - int(
+            (random.randint(0, self.level) * 0.2))))
         #self.outfits_total_battlespeed_total = self.outfits_total_battlespeed_total.replace("ﾏｽ", "")
 
         self.add_fortune_point = 0
@@ -209,64 +224,63 @@ class GuardianData():
             print("max_long_weapon_num = " + str(long_weapon_num_int))
             print("short_weapon_num = " + str(short_got_weapon_num))
             print("long_weapon_num = " + str(long_got_weapon_num))
-            weapon = create_weapon_al.create_weapon(self.level)
+            weapon = create_weapon_twg.create_weapon(self.level)
             weapon_weapon_type = weapon.weapon_type
             if short_got_weapon_num < short_weapon_num_int and "白兵" in weapon_var and weapon_weapon_type == "白兵" and main_weapon_short_flg == False:
-                self.outfits_rightname = weapon.weapon_name
-                self.outfits_rightattack = weapon.element + "+" + str(weapon.attack)
-                self.outfits_rightrange = str(weapon.min_range) + "-" + str(weapon.max_range)
-                self.outfits_righttarget = weapon.target
+                self.outfits_main_weapon_shortname = weapon.weapon_name
+                self.outfits_main_weapon_shortattack = weapon.element + "+" + str(weapon.attack)
+                self.outfits_main_weapon_shortrange = str(weapon.min_range) + "-" + str(weapon.max_range)
+                self.outfits_main_weapon_shorttarget = weapon.target
                 short_got_weapon_num = short_got_weapon_num + 1
                 main_weapon_short_flg = True
                 print("白兵")
 
             elif short_got_weapon_num < short_weapon_num_int and "白兵" in weapon_var and weapon_weapon_type == "白兵" and main_weapon_short_flg == True and sub_weapon_short_flg == False:
-                self.outfits_leftname = weapon.weapon_name
-                self.outfits_leftattack = weapon.element + "+" + str(weapon.attack)
-                self.outfits_leftrange = str(weapon.min_range) + "-" + str(weapon.max_range)
-                self.outfits_lefttarget = weapon.target
+                self.outfits_sub_weapon_shortname = weapon.weapon_name
+                self.outfits_sub_weapon_shortattack = weapon.element + "+" + str(weapon.attack)
+                self.outfits_sub_weapon_shortrange = str(weapon.min_range) + "-" + str(weapon.max_range)
+                self.outfits_sub_weapon_shorttarget = weapon.target
                 short_got_weapon_num = short_got_weapon_num + 1
                 sub_weapon_short_flg = True
                 print("白兵")
 
             elif short_got_weapon_num < short_weapon_num_int and "射撃" in weapon_var and weapon_weapon_type == "射撃" and main_weapon_short_flg == False:
-                self.outfits_rightname = weapon.weapon_name
-                self.outfits_rightattack = weapon.element + "+" + str(weapon.attack)
-                self.outfits_rightrange = str(weapon.min_range) + "-" + str(weapon.max_range)
-                self.outfits_righttarget = weapon.target
+                self.outfits_main_weapon_shortname = weapon.weapon_name
+                self.outfits_main_weapon_shortattack = weapon.element + "+" + str(weapon.attack)
+                self.outfits_main_weapon_shortrange = str(weapon.min_range) + "-" + str(weapon.max_range)
+                self.outfits_main_weapon_shorttarget = weapon.target
                 short_got_weapon_num = short_got_weapon_num + 1
                 main_weapon_short_flg = True
                 print("射撃")
 
             elif short_got_weapon_num < short_weapon_num_int and "射撃" in weapon_var and weapon_weapon_type == "射撃" and main_weapon_short_flg == True and sub_weapon_short_flg == False:
-                self.outfits_leftname = weapon.weapon_name
-                self.outfits_leftattack = weapon.element + "+" + str(weapon.attack)
-                self.outfits_leftrange = str(weapon.min_range) + "-" + str(weapon.max_range)
-                self.outfits_lefttarget = weapon.target
+                self.outfits_sub_weapon_shortname = weapon.weapon_name
+                self.outfits_sub_weapon_shortattack = weapon.element + "+" + str(weapon.attack)
+                self.outfits_sub_weapon_shortrange = str(weapon.min_range) + "-" + str(weapon.max_range)
+                self.outfits_sub_weapon_shorttarget = weapon.target
                 short_got_weapon_num = short_got_weapon_num + 1
                 sub_weapon_short_flg = True
                 print("射撃")
 
-            elif long_got_weapon_num < long_weapon_num_int and "魔導" in weapon_var and weapon_weapon_type == "魔導" and main_weapon_long_flg == False:
-                self.outfits_magicrightname = weapon.weapon_name
-                self.outfits_magicrightattack = weapon.element + "+" + str(weapon.attack)
-                self.outfits_magicrightrange = str(weapon.min_range) + "-" + str(weapon.max_range)
-                self.outfits_magicrighttarget = weapon.target
+            elif long_got_weapon_num < long_weapon_num_int and "電脳" in weapon_var and weapon_weapon_type == "電脳" and main_weapon_long_flg == False:
+                self.outfits_main_weapon_longname = weapon.weapon_name
+                self.outfits_main_weapon_longattack = weapon.element + "+" + str(weapon.attack)
+                self.outfits_main_weapon_longrange = str(weapon.min_range) + "-" + str(weapon.max_range)
+                self.outfits_main_weapon_longtarget = weapon.target
                 long_got_weapon_num = long_got_weapon_num + 1
                 main_weapon_long_flg = True
-                print("魔導")
+                print("電脳")
 
-            elif long_got_weapon_num < long_weapon_num_int and "魔導" in weapon_var and weapon_weapon_type == "魔導" and main_weapon_long_flg == True and sub_weapon_long_flg == False:
-                self.outfits_magicleftname = weapon.weapon_name
-                self.outfits_magicleftattack = weapon.element + "+" + str(weapon.attack)
-                self.outfits_magicleftrange = str(weapon.min_range) + "-" + str(weapon.max_range)
-                self.outfits_magiclefttarget = weapon.target
+            elif long_got_weapon_num < long_weapon_num_int and "電脳" in weapon_var and weapon_weapon_type == "電脳" and main_weapon_long_flg == True and sub_weapon_long_flg == False:
+                self.outfits_sub_weapon_longname = weapon.weapon_name
+                self.outfits_sub_weapon_longattack = weapon.element + "+" + str(weapon.attack)
+                self.outfits_sub_weapon_longrange = str(weapon.min_range) + "-" + str(weapon.max_range)
+                self.outfits_sub_weapon_longtarget = weapon.target
                 long_got_weapon_num = long_got_weapon_num + 1
                 sub_weapon_long_flg = True
-                print("魔導")
+                print("電脳")
 
             loop = loop + 1
-
 
         self.armourstotal_slash = random.randint(0, self.level)
         self.armourstotal_pierce = random.randint(0, self.level)
@@ -276,16 +290,20 @@ class GuardianData():
         self.armourstotal_thunder = random.randint(0, self.level)
         self.armourstotal_light = random.randint(0, self.level)
         self.armourstotal_dark = random.randint(0, self.level)
+        self.armourstotal_electrical = random.randint(0, self.level)
+        self.armourstotal_poison = random.randint(0, self.level)
+        self.armourstotal_suffocation = random.randint(0, self.level)
+        self.armourstotal_infect = random.randint(0, self.level)
 
         print(self.guardian_name)
-        
+
     def output_prompt_guardian(self, image_type="モンスター"):
         text = "文字を描くことなく、以下の特徴を持つ" + image_type + "の全身像を描いてください。 " + \
-        "背景：白 カラーリング：自由 " + \
-        "右腕武装：" + self.outfits_rightname + " " + \
-        "左腕武装：" + self.outfits_leftname + " " + \
-        "右肩武装：" + self.outfits_magicrightname + " " + \
-        "左肩武装：" + self.outfits_magicleftname
+               "背景：白 カラーリング：自由 " + \
+               "右腕武装：" + self.outfits_main_weapon_shortname + " " + \
+               "左腕武装：" + self.outfits_sub_weapon_shortname + " " + \
+               "右肩武装：" + self.outfits_main_weapon_longname + " " + \
+               "左肩武装：" + self.outfits_sub_weapon_longname
         file_name = self.guardian_name + "_エネミープロンプトデータ.txt"
 
         f = open(file_name, 'w', encoding="utf-8")
@@ -297,114 +315,96 @@ class GuardianData():
     def output_text(self):
         # 駒のテキストデータを出力する
         text = self.guardian_name + "\n" + \
-                   "PL:" + self.player_name + "\n" + \
-                   "レベル:" + str(self.level) + \
-                   " サイズ:" + self.guardian_size + "\n"\
-                   "分類:" + self.guardian_type + \
-                   " クラス:" + self.guardian_class
+               "PL:" + self.player_name + "\n" + \
+               "レベル:" + str(self.level) + \
+               " サイズ:" + self.guardian_size + "\n" \
+               "分類:" + self.guardian_type + \
+               " クラス:" + self.guardian_class
 
-        #text = text + "\n財産ポイント:" + self.add_fortune_point
+        # text = text + "\n財産ポイント:" + self.add_fortune_point
 
         text = text + "\n【命中】" + str(self.outfits_total_hit) + \
-                   "【回避】" + str(self.outfits_total_dodge) + \
-                   "【魔導】" + str(self.outfits_total_magic) + \
-                   "【抗魔】" + str(self.outfits_total_countermagic) + \
-                   "【行動】" + str(self.outfits_total_action) + \
-                   "\n【HP】" + str(self.outfits_total_fp) + \
-                   "【MP】" + str(self.outfits_total_mp) + \
-                   "【移動力】" + str(self.outfits_total_battlespeed_total) + "m"
+               "【回避】" + str(self.outfits_total_dodge) + \
+               "【電脳】" + str(self.outfits_total_magic) + \
+               "【防壁】" + str(self.outfits_total_countermagic) + \
+               "【行動】" + str(self.outfits_total_action) + \
+               "\n【HP】" + str(self.outfits_total_hp) + \
+               "【MP】" + str(self.outfits_total_mp) + \
+               "【移動力】" + str(self.outfits_total_battlespeed_total)
 
-        text = text + "\n加護:"
+        text = text + "\nOVD:"
         if (len(self.specials) == 0):
             text = text + "なし" + "/"
         for special in self.specials:
             text = text + special + "/"
         text = text[:-1]
 
-        outfits_rightrangem = ""
-        if self.outfits_rightrange != "":
-            outfits_rightrangem = str(int(self.outfits_rightrange[-1:]) * 5) + "m"
-            if outfits_rightrangem == "0m":
-                outfits_rightrangem = "至近"
+        text = text + "\n【ドロップ】" + str(self.drop_item)
 
-        outfits_leftrangem = ""
-        if self.outfits_leftrange != "":
-            outfits_leftrangem = str(int(self.outfits_leftrange[-1:]) * 5) + "m"
-            if outfits_leftrangem == "0m":
-                outfits_leftrangem = "至近"
-
-        outfits_righttargetm = self.outfits_righttarget
-        if self.outfits_righttarget == "単体":
+        outfits_main_weapon_shorttargetm = self.outfits_main_weapon_shorttarget
+        if self.outfits_main_weapon_shorttarget == "単体":
             pass
         else:
-            outfits_righttargetm = "範囲（選択）"
+            outfits_main_weapon_shorttargetm = "範囲（選択）"
 
-        outfits_lefttargetm = self.outfits_lefttarget
-        if self.outfits_lefttarget == "単体":
+        outfits_sub_weapon_shorttargetm = self.outfits_sub_weapon_shorttarget
+        if self.outfits_sub_weapon_shorttarget == "単体":
             pass
         else:
-            outfits_lefttargetm = "範囲（選択）"
+            outfits_sub_weapon_shorttargetm = "範囲（選択）"
 
-        outfits_magicrighttargetm = self.outfits_magicrighttarget
-        if self.outfits_magicrighttarget == "単体":
+        outfits_main_weapon_longtargetm = self.outfits_main_weapon_longtarget
+        if self.outfits_main_weapon_longtarget == "単体":
             pass
         else:
-            outfits_magicrighttargetm = "範囲（選択）"
+            outfits_main_weapon_longtargetm = "範囲（選択）"
 
-        outfits_magiclefttargetm = self.outfits_magiclefttarget
-        if self.outfits_magiclefttarget == "単体":
+        outfits_sub_weapon_longtargetm = self.outfits_sub_weapon_longtarget
+        if self.outfits_sub_weapon_longtarget == "単体":
             pass
         else:
-            outfits_magiclefttargetm = "範囲（選択）"
+            outfits_sub_weapon_longtargetm = "範囲（選択）"
 
-        outfits_magicrightrangem = ""
-        if self.outfits_magicrightrange != "":
-            outfits_magicrightrangem = str(int(self.outfits_magicrightrange[-1:]) * 5) + "m"
-            if outfits_magicrightrangem == "0m":
-                outfits_magicrightrangem = "至近"
+        if not self.outfits_main_weapon_shortname == "":
+            text = text + "\n[*]物武1:" + self.outfits_main_weapon_shortname + \
+                   " 射程:" + self.outfits_main_weapon_shortrange + \
+                   " 代償:" + self.outfits_main_weapon_shortstrong + \
+                   "\n攻撃力:" + self.outfits_main_weapon_shortattack + \
+                   " 対象:" + self.outfits_main_weapon_shorttarget
 
-        outfits_magicleftrangem = ""
-        if self.outfits_magicleftrange != "":
-            outfits_magicleftrangem = str(int(self.outfits_magicleftrange[-1:]) * 5) + "m"
-            if outfits_magicleftrangem == "0m":
-                outfits_magicleftrangem = "至近"
+        if not self.outfits_sub_weapon_shortname == "":
+            text = text + "\n[*]物武2:" + self.outfits_sub_weapon_shortname + \
+                   " 射程:" + self.outfits_sub_weapon_shortrange + \
+                   " 代償:" + self.outfits_sub_weapon_shortstrong + \
+                   "\n攻撃力:" + self.outfits_sub_weapon_shortattack + \
+                   " 対象:" + self.outfits_sub_weapon_shorttarget
 
-        if not self.outfits_rightname == "":
-            text = text + "\n[*]主近:" + self.outfits_rightname + \
-                   " 射程:" + outfits_rightrangem + \
-                   " 代償:" + self.outfits_rightstrong + \
-                   "\n攻撃力:" + self.outfits_rightattack + \
-                   " 対象:" + outfits_righttargetm
+        if not self.outfits_main_weapon_longname == "":
+            text = text + "\n[*]電武1:" + self.outfits_main_weapon_longname + \
+                   " 射程:" + self.outfits_main_weapon_longrange + \
+                   " 代償:" + self.outfits_main_weapon_longstrong + \
+                   "\n攻撃力:" + self.outfits_main_weapon_longattack + \
+                   " 対象:" + self.outfits_main_weapon_longtarget
 
-        if not self.outfits_leftname == "":
-            text = text + "\n[*]副近:" + self.outfits_leftname + \
-                   " 射程:" + outfits_leftrangem + \
-                   " 代償:" + self.outfits_leftstrong + \
-                   "\n攻撃力:" + self.outfits_leftattack + \
-                   " 対象:" + outfits_lefttargetm
-
-        if not self.outfits_magicrightname == "":
-            text = text + "\n[*]主遠:" + self.outfits_magicrightname + \
-                   " 射程:" + outfits_magicrightrangem + \
-                   " 代償:" + self.outfits_magicrightstrong + \
-                   "\n攻撃力:" + self.outfits_magicrightattack + \
-                   " 対象:" + outfits_magicrighttargetm
-
-        if not self.outfits_magicleftname == "":
-            text = text + "\n[*]副遠:" + self.outfits_magicleftname + \
-                   " 射程:" + outfits_magicleftrangem + \
-                   " 代償:" + self.outfits_magicleftstrong + \
-                   "\n攻撃力:" + self.outfits_magicleftattack + \
-                   " 対象:" + outfits_magiclefttargetm
+        if not self.outfits_sub_weapon_longname == "":
+            text = text + "\n[*]電武2:" + self.outfits_sub_weapon_longname + \
+                   " 射程:" + self.outfits_sub_weapon_longrange + \
+                   " 代償:" + self.outfits_sub_weapon_longstrong + \
+                   "\n攻撃力:" + self.outfits_sub_weapon_longattack + \
+                   " 対象:" + self.outfits_sub_weapon_longtarget
 
         text = text + "\n防御力:斬" + str(self.armourstotal_slash) + \
-                "/刺" + str(self.armourstotal_pierce) + \
-                "/殴" + str(self.armourstotal_crash) + \
-                "/炎" + str(self.armourstotal_fire) + \
-                "/氷" + str(self.armourstotal_ice) + \
-                "/雷" + str(self.armourstotal_thunder) + \
-                "/光" + str(self.armourstotal_light) + \
-                "/闇" + str(self.armourstotal_dark)
+               "/刺" + str(self.armourstotal_pierce) + \
+               "/殴" + str(self.armourstotal_crash) + \
+               "/炎" + str(self.armourstotal_fire) + \
+               "/氷" + str(self.armourstotal_ice) + \
+               "/雷" + str(self.armourstotal_thunder) + \
+               "\n/光" + str(self.armourstotal_light) + \
+               "/闇" + str(self.armourstotal_dark) + \
+               "/電" + str(self.armourstotal_electrical) + \
+               "/毒" + str(self.armourstotal_poison) + \
+               "/空" + str(self.armourstotal_suffocation) + \
+               "/汚" + str(self.armourstotal_infect)
 
         print(text)
 
@@ -418,10 +418,10 @@ class GuardianData():
         self.output_pawn(text)
 
     def output_online_json_data(self):
-        self.outfits_rightattack_array = self.outfits_rightattack.split("+")
-        self.outfits_leftattack_array = self.outfits_leftattack.split("+")
-        self.outfits_magicrightattack_array = self.outfits_magicrightattack.split("+")
-        self.outfits_magicleftattack_array = self.outfits_magicleftattack.split("+")
+        self.outfits_main_weapon_shortattack_array = self.outfits_main_weapon_shortattack.split("+")
+        self.outfits_sub_weapon_shortattack_array = self.outfits_sub_weapon_shortattack.split("+")
+        self.outfits_main_weapon_longattack_array = self.outfits_main_weapon_longattack.split("+")
+        self.outfits_sub_weapon_longattack_array = self.outfits_sub_weapon_longattack.split("+")
 
         jsontext = {}
         jsontext["data"] = {}
@@ -435,54 +435,53 @@ class GuardianData():
         jsontext["data"]["magic"] = max(0, int(self.outfits_total_magic))
         jsontext["data"]["countermagic"] = max(0, int(self.outfits_total_countermagic))
         jsontext["data"]["action"] = max(0, int(self.outfits_total_action))
-        jsontext["data"]["fp"] = max(0, int(self.outfits_total_fp))
         jsontext["data"]["hp"] = max(0, int(self.outfits_total_hp))
         jsontext["data"]["mp"] = max(0, int(self.outfits_total_mp))
         jsontext["data"]["battlespeed"] = max(0, int(self.outfits_total_battlespeed_total))
-        jsontext["data"]["mws_name"] = self.outfits_rightname
+        jsontext["data"]["mws_name"] = self.outfits_main_weapon_shortname
 
-        if self.outfits_rightrange == "":
+        if self.outfits_main_weapon_shortrange == "":
             jsontext["data"]["mws_shortrange"] = 0
             jsontext["data"]["mws_longrange"] = 0
         else:
-            jsontext["data"]["mws_shortrange"] = int(self.outfits_rightrange[:1])
-            jsontext["data"]["mws_longrange"] = int(self.outfits_rightrange[-1:])
+            jsontext["data"]["mws_shortrange"] = int(self.outfits_main_weapon_shortrange[:1])
+            jsontext["data"]["mws_longrange"] = int(self.outfits_main_weapon_shortrange[-1:])
 
-        jsontext["data"]["mws_attack"] = max(0, int(self.outfits_rightattack_array[1]))
-        jsontext["data"]["mws_element"] = self.outfits_rightattack_array[0]
-        jsontext["data"]["sws_name"] = self.outfits_leftname
+        jsontext["data"]["mws_attack"] = max(0, int(self.outfits_main_weapon_shortattack_array[1]))
+        jsontext["data"]["mws_element"] = self.outfits_main_weapon_shortattack_array[0]
+        jsontext["data"]["sws_name"] = self.outfits_sub_weapon_shortname
 
-        if self.outfits_leftrange == "":
+        if self.outfits_sub_weapon_shortrange == "":
             jsontext["data"]["sws_shortrange"] = 0
             jsontext["data"]["sws_longrange"] = 0
         else:
-            jsontext["data"]["sws_shortrange"] = int(self.outfits_leftrange[:1])
-            jsontext["data"]["sws_longrange"] = int(self.outfits_leftrange[-1:])
+            jsontext["data"]["sws_shortrange"] = int(self.outfits_sub_weapon_shortrange[:1])
+            jsontext["data"]["sws_longrange"] = int(self.outfits_sub_weapon_shortrange[-1:])
 
-        jsontext["data"]["sws_attack"] = max(0, int(self.outfits_leftattack_array[1]))
-        jsontext["data"]["sws_element"] = self.outfits_leftattack_array[0]
-        jsontext["data"]["mwl_name"] = self.outfits_magicrightname
+        jsontext["data"]["sws_attack"] = max(0, int(self.outfits_sub_weapon_shortattack_array[1]))
+        jsontext["data"]["sws_element"] = self.outfits_sub_weapon_shortattack_array[0]
+        jsontext["data"]["mwl_name"] = self.outfits_main_weapon_longname
 
-        if self.outfits_magicrightrange == "":
+        if self.outfits_main_weapon_longrange == "":
             jsontext["data"]["mwl_shortrange"] = 0
             jsontext["data"]["mwl_longrange"] = 0
         else:
-            jsontext["data"]["mwl_shortrange"] = int(self.outfits_magicrightrange[:1])
-            jsontext["data"]["mwl_longrange"] = int(self.outfits_magicrightrange[-1:])
+            jsontext["data"]["mwl_shortrange"] = int(self.outfits_main_weapon_longrange[:1])
+            jsontext["data"]["mwl_longrange"] = int(self.outfits_main_weapon_longrange[-1:])
 
-        jsontext["data"]["mwl_attack"] = max(0, int(self.outfits_magicrightattack_array[1]))
-        jsontext["data"]["mwl_element"] = self.outfits_magicrightattack_array[0]
-        jsontext["data"]["swl_name"] = self.outfits_magicleftname
+        jsontext["data"]["mwl_attack"] = max(0, int(self.outfits_main_weapon_longattack_array[1]))
+        jsontext["data"]["mwl_element"] = self.outfits_main_weapon_longattack_array[0]
+        jsontext["data"]["swl_name"] = self.outfits_sub_weapon_longname
 
-        if self.outfits_magicleftrange == "":
+        if self.outfits_sub_weapon_longrange == "":
             jsontext["data"]["swl_shortrange"] = 0
             jsontext["data"]["swl_longrange"] = 0
         else:
-            jsontext["data"]["swl_shortrange"] = int(self.outfits_magicleftrange[:1])
-            jsontext["data"]["swl_longrange"] = int(self.outfits_magicleftrange[-1:])
+            jsontext["data"]["swl_shortrange"] = int(self.outfits_sub_weapon_longrange[:1])
+            jsontext["data"]["swl_longrange"] = int(self.outfits_sub_weapon_longrange[-1:])
 
-        jsontext["data"]["swl_attack"] = max(0, int(self.outfits_magicleftattack_array[1]))
-        jsontext["data"]["swl_element"] = self.outfits_magicleftattack_array[0]
+        jsontext["data"]["swl_attack"] = max(0, int(self.outfits_sub_weapon_longattack_array[1]))
+        jsontext["data"]["swl_element"] = self.outfits_sub_weapon_longattack_array[0]
         jsontext["data"]["armourstotal_slash"] = max(0, int(self.armourstotal_slash))
         jsontext["data"]["armourstotal_pierce"] = max(0, int(self.armourstotal_pierce))
         jsontext["data"]["armourstotal_crash"] = max(0, int(self.armourstotal_crash))
@@ -491,12 +490,15 @@ class GuardianData():
         jsontext["data"]["armourstotal_thunder"] = max(0, int(self.armourstotal_thunder))
         jsontext["data"]["armourstotal_light"] = max(0, int(self.armourstotal_light))
         jsontext["data"]["armourstotal_dark"] = max(0, int(self.armourstotal_dark))
+        jsontext["data"]["armourstotal_electrical "] = max(0, int(self.armourstotal_electrical))
+        jsontext["data"]["armourstotal_poison"] = max(0, int(self.armourstotal_poison))
+        jsontext["data"]["armourstotal_suffocation"] = max(0, int(self.armourstotal_suffocation))
+        jsontext["data"]["armourstotal_infect"] = max(0, int(self.armourstotal_infect))
         jsontext["data"]["cost"] = (jsontext["data"]["hit"] * 100)
         jsontext["data"]["cost"] = (jsontext["data"]["dodge"] * 100) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["magic"] * 100) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["countermagic"] * 100) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["action"] * 100) + jsontext["data"]["cost"]
-        jsontext["data"]["cost"] = (jsontext["data"]["fp"] * 10) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["hp"] * 10) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["mp"] * 10) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["battlespeed"] * 200) +  jsontext["data"]["cost"]
@@ -520,6 +522,10 @@ class GuardianData():
         jsontext["data"]["cost"] = (jsontext["data"]["armourstotal_thunder"] * 50) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["armourstotal_light"] * 50) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["armourstotal_dark"] * 50) + jsontext["data"]["cost"]
+        jsontext["data"]["cost"] = (jsontext["data"]["armourstotal_electrical"] * 50) + jsontext["data"]["cost"]
+        jsontext["data"]["cost"] = (jsontext["data"]["armourstotal_poison"] * 50) + jsontext["data"]["cost"]
+        jsontext["data"]["cost"] = (jsontext["data"]["armourstotal_suffocation"] * 50) + jsontext["data"]["cost"]
+        jsontext["data"]["cost"] = (jsontext["data"]["armourstotal_infect"] * 50) + jsontext["data"]["cost"]
 
         # 出力
         file_name = self.guardian_name + "_エネミーオンラインデータ.txt"
@@ -542,27 +548,13 @@ class GuardianData():
 
         jsontext["data"]["status"].append({})
         jsontext["data"]["status"][0]["label"] = "HP"
-        jsontext["data"]["status"][0]["value"] = self.outfits_total_fp
-        jsontext["data"]["status"][0]["max"] = self.outfits_total_fp
+        jsontext["data"]["status"][0]["value"] = self.outfits_total_hp
+        jsontext["data"]["status"][0]["max"] = self.outfits_total_hp
 
         jsontext["data"]["status"].append({})
-        jsontext["data"]["status"][1]["label"] = "MP"
+        jsontext["data"]["status"][1]["label"] = "EN"
         jsontext["data"]["status"][1]["value"] = self.outfits_total_mp
         jsontext["data"]["status"][1]["max"] = self.outfits_total_mp
-
-        '''
-
-        jsontext["data"]["status"].append({})
-        jsontext["data"]["status"][2]["label"] = "財産ポイント"
-        jsontext["data"]["status"][2]["value"] = self.add_fortune_point
-        jsontext["data"]["status"][2]["max"] = self.add_fortune_point
-
-        jsontext["data"]["status"].append({})
-        jsontext["data"]["status"][3]["label"] = "ブレイク"
-        jsontext["data"]["status"][3]["value"] = 1
-        jsontext["data"]["status"][3]["max"] = 1
-        
-        '''
 
         i = 2
 
@@ -579,6 +571,18 @@ class GuardianData():
             jsontext["data"]["status"][i]["value"] = 1
             jsontext["data"]["status"][i]["max"] = 1
             i = i + 1
+
+        jsontext["data"]["status"].append({})
+        jsontext["data"]["status"][i]["label"] = "クリティカル値"
+        jsontext["data"]["status"][i]["value"] = 12
+        jsontext["data"]["status"][i]["max"] = 13
+        i = i + 1
+
+        jsontext["data"]["status"].append({})
+        jsontext["data"]["status"][i]["label"] = "ファンブル値"
+        jsontext["data"]["status"][i]["value"] = 2
+        jsontext["data"]["status"][i]["max"] = 13
+        i = i + 1
 
         jsontext["data"]["params"] = []
 
@@ -639,11 +643,11 @@ class GuardianData():
         jsontext["data"]["params"][13]["value"] = str(self.outfits_total_dodge)
 
         jsontext["data"]["params"].append({})
-        jsontext["data"]["params"][14]["label"] = "魔導値"
+        jsontext["data"]["params"][14]["label"] = "電脳値"
         jsontext["data"]["params"][14]["value"] = str(self.outfits_total_magic)
 
         jsontext["data"]["params"].append({})
-        jsontext["data"]["params"][15]["label"] = "抗魔値"
+        jsontext["data"]["params"][15]["label"] = "防壁値"
         jsontext["data"]["params"][15]["value"] = str(self.outfits_total_countermagic)
 
         jsontext["data"]["params"].append({})
@@ -687,48 +691,71 @@ class GuardianData():
         jsontext["data"]["params"][25]["value"] = str(self.armourstotal_dark)
 
         jsontext["data"]["params"].append({})
-        jsontext["data"]["params"][26]["label"] = "状態"
-        jsontext["data"]["params"][26]["value"] = "通常"
+        jsontext["data"]["params"][26]["label"] = "電防御"
+        jsontext["data"]["params"][26]["value"] = str(self.armourstotal_ice)
 
-        outfits_rightattack_array = self.outfits_rightattack.split("+")
-        outfits_leftattack_array = self.outfits_leftattack.split("+")
-        outfits_magicrightattack_array = self.outfits_magicrightattack.split("+")
-        outfits_magicleftattack_array = self.outfits_magicleftattack.split("+")
+        jsontext["data"]["params"].append({})
+        jsontext["data"]["params"][27]["label"] = "雷防御"
+        jsontext["data"]["params"][27]["value"] = str(self.armourstotal_thunder)
+
+        jsontext["data"]["params"].append({})
+        jsontext["data"]["params"][28]["label"] = "光防御"
+        jsontext["data"]["params"][28]["value"] = str(self.armourstotal_light)
+
+        jsontext["data"]["params"].append({})
+        jsontext["data"]["params"][29]["label"] = "闇防御"
+        jsontext["data"]["params"][29]["value"] = str(self.armourstotal_dark)
+
+        jsontext["data"]["params"].append({})
+        jsontext["data"]["params"][30]["label"] = "状態"
+        jsontext["data"]["params"][30]["value"] = ""
+
+        outfits_main_weapon_shortattack_array = self.outfits_main_weapon_shortattack.split("+")
+        outfits_sub_weapon_shortattack_array = self.outfits_sub_weapon_shortattack.split("+")
+        outfits_main_weapon_longattack_array = self.outfits_main_weapon_longattack.split("+")
+        outfits_sub_weapon_longattack_array = self.outfits_sub_weapon_longattack.split("+")
 
         jsontext["data"]["active"] = "true"
         jsontext["data"]["secret"] = "false"
         jsontext["data"]["invisible"] = "false"
         jsontext["data"]["hideStatus"] = "false"
-        commandtext = "//アクション\nムーブ:\nマイナー:\nメジャー:\n//リソース\n" + \
+        jsontext["data"]["hideStatus"] = "false"
+        
+        commandtext = "//アクション\nムーブ:\nマイナー:\nメジャー:\n\n//リソース\n" + \
                                        "C({HP}-YY)　残りHP\n" + \
-                                       "C({EN}-YY)　残りEN\n\n" + \
-                                       "//防御、+0欄に修正を記入\nAL+{回避値}+0　近・回避\n" \
-                                       "AL+{抗魔値}+0　遠・抗魔\nC(XX-{}-0)　被ダメージ、{}内に防御属性3文字\n\n" \
-                                       "//攻撃、+0欄に修正を記入\nAL+{命中値}+0　近・命中\nAL+{魔導値}+0　遠・魔導\n"
+                                       "C({MP}-YY)　残りMP\n\n" + \
+                                       "//防御、+0欄に修正を記入\n2d6+{回避値}+0[{クリティカル値},{ファンブル値}]　近・回避\n" + \
+                                       "2d6+{防壁値}+0[{クリティカル値},{ファンブル値}]　遠・防壁\n" + \
+                                       "C(XX-{}-0)　被ダメージ、{}内に防御属性3文字\n\n" + \
+                                       "//攻撃、+0欄に修正を記入\n2d6+{命中値}+0[{クリティカル値},{ファンブル値}]　近・命中\n" + \
+                                       "2d6+{電脳値}+0[{クリティカル値},{ファンブル値}]　遠・電脳\n"
 
-        if self.outfits_rightname != "":
-            commandtext = commandtext + "2d6+" + outfits_rightattack_array[1] + "+0　" + \
-                                       "〈" + outfits_rightattack_array[0] + "〉" + \
-                                       self.outfits_rightname + "ダメージ\n"
+        if self.outfits_main_weapon_shortname != "":
+            commandtext = commandtext + "2d6+" + outfits_main_weapon_shortattack_array[1] + "+0　" + \
+                          "〈" + outfits_main_weapon_shortattack_array[0] + "〉" + \
+                          self.outfits_main_weapon_shortname + "ダメージ\n"
 
-        if self.outfits_leftname != "":
-            commandtext = commandtext + "2d6+" + outfits_leftattack_array[1] + "+0　" + \
-                                       "〈" + outfits_leftattack_array[0] + "〉" + \
-                                       self.outfits_leftname + "ダメージ\n"
+        if self.outfits_sub_weapon_shortname != "":
+            commandtext = commandtext + "2d6+" + outfits_sub_weapon_shortattack_array[1] + "+0　" + \
+                          "〈" + outfits_sub_weapon_shortattack_array[0] + "〉" + \
+                          self.outfits_sub_weapon_shortname + "ダメージ\n"
 
-        if self.outfits_magicrightname != "":
-                commandtext = commandtext + "2d6+" + outfits_magicrightattack_array[1] + "+0　" + \
-                                       "〈" + outfits_magicrightattack_array[0] + "〉" + \
-                                       self.outfits_magicrightname + "ダメージ\n"
+        if self.outfits_main_weapon_longname != "":
+            commandtext = commandtext + "2d6+" + outfits_main_weapon_longattack_array[1] + "+0　" + \
+                          "〈" + outfits_main_weapon_longattack_array[0] + "〉" + \
+                          self.outfits_main_weapon_longname + "ダメージ\n"
 
-        if self.outfits_magicleftname != "":
-                commandtext = commandtext + "2d6+" + outfits_magicleftattack_array[1] + "+0　" + \
-                                       "〈" + outfits_magicleftattack_array[0] + "〉" + \
-                                       self.outfits_magicleftname + "ダメージ\n"
+        if self.outfits_sub_weapon_longname != "":
+            commandtext = commandtext + "2d6+" + outfits_sub_weapon_longattack_array[1] + "+0　" + \
+                          "〈" + outfits_sub_weapon_longattack_array[0] + "〉" + \
+                          self.outfits_sub_weapon_longname + "ダメージ\n"
 
-        commandtext = commandtext + "\n//能力値判定\nAL+{体力B}  体力判定\nAL+{反射B}  反射判定\nAL+{知覚B}  " \
-                                       "知覚判定\nAL+{理知B}  理知判定\nAL+{意志B}  意志判定\nAL+{幸運B}  幸運判定"
-
+        commandtext = commandtext + "\n//能力値判定\n2d6+{体力B}+0[{クリティカル値},{ファンブル値}]　体力判定\n" + \
+                                     "2d6+{反射B}+0[{クリティカル値},{ファンブル値}]　反射判定\n" + \
+                                     "2d6+{知覚B}+0[{クリティカル値},{ファンブル値}]　知覚判定\n" + \
+                                     "2d6+{理知B}+0[{クリティカル値},{ファンブル値}]　理知判定\n" + \
+                                     "2d6+{意志B}+0[{クリティカル値},{ファンブル値}]　意志判定\n" + \
+                                     "2d6+{幸運B}+0[{クリティカル値},{ファンブル値}]　幸運判定"
 
         jsontext["data"]["commands"] = commandtext
         jsontext["data"]["externalUrl"] = self.url
@@ -739,8 +766,22 @@ class GuardianData():
 
         print("エネミー駒データを生成しました")
 
+    def output_prompt_guardian(self, image_type="人型ロボット"):
+        text = "文字を描くことなく、以下の特徴を持つ" + image_type + "の全身像を描いてください。 " + \
+        "背景：白 カラーリング：自由 " + \
+        "右腕武装：" + self.outfits_main_weapon_shortname + " " + \
+        "左腕武装：" + self.outfits_sub_weapon_shortname + " " + \
+        "右肩武装：" + self.outfits_main_weapon_longname + " " + \
+        "左肩武装：" + self.outfits_sub_weapon_longname
+        file_name = self.guardian_name + "_エネミープロンプトデータ.txt"
 
-def get_data(level=3, guardian_type="ソロ", guardian_class="モンスター", weapon_var=[],
+        f = open(file_name, 'w', encoding="utf-8")
+        f.write(text)
+        f.close()
+
+        print("エネミープロンプトデータを生成しました")
+
+def get_data(level=3, guardian_type="ソロ", guardian_class="ミーレス（テクノメック）", weapon_var=[],
              short_weapon_num="1", long_weapon_num="1"):
     weapon_var_list = []
     for checkbox in weapon_var:
@@ -752,7 +793,7 @@ def get_data(level=3, guardian_type="ソロ", guardian_class="モンスター", 
     if weapon_var_list[1] == True:
         weapon_var_list2.append("射撃")
     if weapon_var_list[2] == True:
-        weapon_var_list2.append("魔導")
+        weapon_var_list2.append("電脳")
 
     guardian = GuardianData()
     time.sleep(5)
@@ -765,18 +806,16 @@ def get_data(level=3, guardian_type="ソロ", guardian_class="モンスター", 
     guardian.input_data(level=level, guardian_type=guardian_type, guardian_class=guardian_class,
                         weapon_var=weapon_var_list2, short_weapon_num=short_weapon_num, long_weapon_num=long_weapon_num)
     guardian.output_text()
-    if "モンスター" in guardian_class:
-        guardian.output_prompt_guardian(image_type="モンスター")
-    elif "ドラゴン" in guardian_class:
-        guardian.output_prompt_guardian(image_type="ドラゴン")
-    elif "ソルジャー" in guardian_class:
-        guardian.output_prompt_guardian(image_type="人物")
-    elif "ロボット" in guardian_class:
-        guardian.output_prompt_guardian(image_type="ロボット")
+    if guardian_class == "モンスター":
+        guardian.output_prompt_guardian(image_type="怪獣")
     elif guardian_class == "艦船":
         guardian.output_prompt_guardian(image_type="宇宙戦艦")
+    elif guardian_class == "機械":
+        guardian.output_prompt_guardian(image_type="機械モンスター")
+    elif guardian_class == "人間" or guardian_class == "デイブレイカー" or guardian_class == "アビスデイブレイカー":
+        guardian.output_prompt_guardian(image_type="人間")
     else:
-        guardian.output_prompt_guardian(image_type="モンスター")
+        guardian.output_prompt_guardian(image_type="機械モンスター")
 
     #guardian.output_online_json_data()
 
@@ -787,7 +826,7 @@ def get_data(level=3, guardian_type="ソロ", guardian_class="モンスター", 
 
 if __name__ == "__main__":
     root = tkinter.Tk()
-    root.title(u"アルシャードセイヴァーRPG ココフォリア用エネミーデータ作成ツール")
+    root.title(u"トワイライトガンスモークRPG ココフォリア用エネミーデータ作成ツール")
     root.geometry("400x450")
 
     frame1 = tkinter.Frame(root, width=200, height=50)  # Button, Entry
@@ -857,11 +896,9 @@ if __name__ == "__main__":
     Static3.pack()
 
     # エントリー
-    ComboBox2 = ttk.Combobox(frame6, width=25, values=["モンスター", "シャードモンスター",
-                                                       "アビスモンスター", "艦船", "ソルジャー",
-                                                       "シャードソルジャー", "アビスソルジャー",
-                                                       "ロボット", "シャードロボット",
-                                                       "アビスロボット", "ドラゴン", "シャードドラゴン", "アビスドラゴン"])
+    ComboBox2 = ttk.Combobox(frame6, width=25, values=["人間", "艦船", "機械",
+                                                       "モンスター", "デイブレイカー",
+                                                       "アビスデイブレイカー"])
     ComboBox2.pack()
 
     # ラベル
@@ -872,7 +909,7 @@ if __name__ == "__main__":
     checkBoxes = []
     checkBoxVars = []
 
-    nameList = ["白兵", "射撃", "魔導"]
+    nameList = ["白兵", "射撃", "電脳"]
     # checkBox作成関数を呼び出して描画
     createMultiCheckButton(frame8, nameList, checkBoxes, checkBoxVars)
 
@@ -891,7 +928,7 @@ if __name__ == "__main__":
 
     # エントリー
     ComboBox3 = ttk.Combobox(frame10, width=25, values=["0", "1",
-                                                       "2"])
+                                                        "2"])
     ComboBox3.current(str(shortrnd))
     ComboBox3.pack()
 

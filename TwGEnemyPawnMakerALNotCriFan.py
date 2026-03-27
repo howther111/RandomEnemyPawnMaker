@@ -12,16 +12,14 @@ import CreatePetName
 import CreatePilotName
 import create_weapon_twg
 
-
 def createMultiCheckButton(baseFrame, nameList, checkBoxes, checkBoxVars):
     for i, name in enumerate(nameList):
         checkBoxVars.append(tkinter.BooleanVar())
         checkBoxVars[i].set(True)  # 初期値を明示的にcheckにしておく
         checkBoxes.append(tkinter.Checkbutton(baseFrame, text=name, variable=checkBoxVars[i]))
-        checkBoxes[i].pack(anchor=tkinter.W, pady=10)
-    root.update()  # 描画の更新
-    baseFrame.configure(height=checkBoxes[i].winfo_y() + checkBoxes[
-        i].winfo_height() + 20)  # baseFrameの大きさ調整　winfo_height()+20 : pady=20 equivalent
+        checkBoxes[i].pack(anchor=tkinter.W,pady=10)
+    root.update()   # 描画の更新
+    baseFrame.configure(height=checkBoxes[i].winfo_y()+checkBoxes[i].winfo_height()+20)   # baseFrameの大きさ調整　winfo_height()+20 : pady=20 equivalent
 
 
 class GuardianData():
@@ -98,7 +96,7 @@ class GuardianData():
     armourstotal_suffocation = 0
     armourstotal_infect = 0
 
-    drop_item = "]"
+    drop_item = ""
 
     items = []
     specials = []
@@ -157,23 +155,23 @@ class GuardianData():
             self.guardian_size = "XL"
 
         self.player_name = "エネミー"
-        self.strong_total = 3 + max(0, random.randint(0, 6) + random.randint(0, self.level))
+        self.strong_total = 3 + max(0, random.randint(0,6) + random.randint(0, self.level))
         self.strong_bonus = int(self.strong_total / 3)
-        self.reflex_total = 3 + max(0, random.randint(0, 6) + random.randint(0, self.level))
+        self.reflex_total = 3 + max(0, random.randint(0,6) + random.randint(0, self.level))
         self.reflex_bonus = int(self.reflex_total / 3)
-        self.sense_total = 3 + max(0, random.randint(0, 6) + random.randint(0, self.level))
+        self.sense_total = 3 + max(0, random.randint(0,6) + random.randint(0, self.level))
         self.sense_bonus = int(self.sense_total / 3)
-        self.intellect_total = 3 + max(0, random.randint(0, 6) + random.randint(0, self.level))
+        self.intellect_total = 3 + max(0, random.randint(0,6) + random.randint(0, self.level))
         self.intellect_bonus = int(self.intellect_total / 3)
-        self.will_total = 3 + max(0, random.randint(0, 6) + random.randint(0, self.level))
+        self.will_total = 3 + max(0, random.randint(0,6) + random.randint(0, self.level))
         self.will_bonus = int(self.will_total / 3)
-        self.bllesing_total = 3 + max(0, random.randint(0, 6) + random.randint(0, self.level))
+        self.bllesing_total = 3 + max(0, random.randint(0,6) + random.randint(0, self.level))
         self.bllesing_bonus = int(self.bllesing_total / 3)
 
         special_num = 0
         if guardian_class == "デイブレイカー":
             special_num = 3
-        elif guardian_class == "アビスデイブレイカー":
+        elif guardian_class == "アビスデイブレイカー" :
             special_num = max(0, (random.randint(0, self.level) * 2) - random.randint(0, self.level))
 
         if special_num > 0:
@@ -205,7 +203,7 @@ class GuardianData():
         self.outfits_total_mp = max(10, (random.randint(self.level - 2, self.level) * 5) + (random.randint(1, 5) * 1))
         self.outfits_total_battlespeed_total = max(1, int(3 + int((random.randint(0, self.level) * 0.3)) - int(
             (random.randint(0, self.level) * 0.2))))
-        # self.outfits_total_battlespeed_total = self.outfits_total_battlespeed_total.replace("ﾏｽ", "")
+        #self.outfits_total_battlespeed_total = self.outfits_total_battlespeed_total.replace("ﾏｽ", "")
 
         self.add_fortune_point = 0
 
@@ -221,8 +219,7 @@ class GuardianData():
         maxloop = 1000
         loop = 0
 
-        while (
-                short_got_weapon_num < short_weapon_num_int or long_got_weapon_num < long_weapon_num_int) and loop < maxloop:
+        while (short_got_weapon_num < short_weapon_num_int or long_got_weapon_num < long_weapon_num_int) and loop < maxloop:
             print("max_short_weapon_num = " + str(short_weapon_num_int))
             print("max_long_weapon_num = " + str(long_weapon_num_int))
             print("short_weapon_num = " + str(short_got_weapon_num))
@@ -321,7 +318,7 @@ class GuardianData():
                "PL:" + self.player_name + "\n" + \
                "レベル:" + str(self.level) + \
                " サイズ:" + self.guardian_size + "\n" \
-                                                 "分類:" + self.guardian_type + \
+               "分類:" + self.guardian_type + \
                " クラス:" + self.guardian_class
 
         # text = text + "\n財産ポイント:" + self.add_fortune_point
@@ -504,22 +501,18 @@ class GuardianData():
         jsontext["data"]["cost"] = (jsontext["data"]["action"] * 100) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["hp"] * 10) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["mp"] * 10) + jsontext["data"]["cost"]
-        jsontext["data"]["cost"] = (jsontext["data"]["battlespeed"] * 200) + jsontext["data"]["cost"]
+        jsontext["data"]["cost"] = (jsontext["data"]["battlespeed"] * 200) +  jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (min(10, max(0, jsontext["data"]["mws_longrange"])) * 200) + jsontext["data"]["cost"]
-        jsontext["data"]["cost"] = (min(10, max(0, jsontext["data"]["mws_shortrange"])) * -100) + jsontext["data"][
-            "cost"]
+        jsontext["data"]["cost"] = (min(10, max(0, jsontext["data"]["mws_shortrange"])) * -100) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["mws_attack"] * 100) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (min(10, max(0, jsontext["data"]["sws_longrange"])) * 200) + jsontext["data"]["cost"]
-        jsontext["data"]["cost"] = (min(10, max(0, jsontext["data"]["sws_shortrange"])) * -100) + jsontext["data"][
-            "cost"]
+        jsontext["data"]["cost"] = (min(10, max(0, jsontext["data"]["sws_shortrange"])) * -100) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["sws_attack"] * 100) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (min(10, max(0, jsontext["data"]["mwl_longrange"])) * 200) + jsontext["data"]["cost"]
-        jsontext["data"]["cost"] = (min(10, max(0, jsontext["data"]["mwl_shortrange"])) * -100) + jsontext["data"][
-            "cost"]
+        jsontext["data"]["cost"] = (min(10, max(0, jsontext["data"]["mwl_shortrange"])) * -100) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["mwl_attack"] * 100) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (min(10, max(0, jsontext["data"]["swl_longrange"])) * 200) + jsontext["data"]["cost"]
-        jsontext["data"]["cost"] = (min(10, max(0, jsontext["data"]["swl_shortrange"])) * -100) + jsontext["data"][
-            "cost"]
+        jsontext["data"]["cost"] = (min(10, max(0, jsontext["data"]["swl_shortrange"])) * -100) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["swl_attack"] * 100) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["armourstotal_slash"] * 50) + jsontext["data"]["cost"]
         jsontext["data"]["cost"] = (jsontext["data"]["armourstotal_pierce"] * 50) + jsontext["data"]["cost"]
@@ -599,11 +592,11 @@ class GuardianData():
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][1]["label"] = "反射基本値"
-        jsontext["data"]["params"][1]["value"] = str(self.sense_total)
+        jsontext["data"]["params"][1]["value"] = str(self.reflex_total)
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][2]["label"] = "知覚基本値"
-        jsontext["data"]["params"][2]["value"] = str(self.strong_total)
+        jsontext["data"]["params"][2]["value"] = str(self.sense_total)
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][3]["label"] = "理知基本値"
@@ -623,11 +616,11 @@ class GuardianData():
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][7]["label"] = "反射B"
-        jsontext["data"]["params"][7]["value"] = str(self.sense_bonus)
+        jsontext["data"]["params"][7]["value"] = str(self.reflex_bonus)
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][8]["label"] = "知覚B"
-        jsontext["data"]["params"][8]["value"] = str(self.strong_bonus)
+        jsontext["data"]["params"][8]["value"] = str(self.sense_bonus)
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][9]["label"] = "理知B"
@@ -727,15 +720,15 @@ class GuardianData():
         jsontext["data"]["invisible"] = "false"
         jsontext["data"]["hideStatus"] = "false"
         jsontext["data"]["hideStatus"] = "false"
-
+        
         commandtext = "//アクション\nムーブ:\nマイナー:\nメジャー:\n\n//リソース\n" + \
-                      "C({HP}-YY)　残りHP\n" + \
-                      "C({MP}-YY)　残りMP\n\n" + \
-                      "//防御、+0欄に修正を記入\nAL+{回避値}+0　近・回避\n" + \
-                      "AL+{防壁値}+0　遠・防壁\n" + \
-                      "C(XX-{}-0)　被ダメージ、{}内に防御属性3文字\n\n" + \
-                      "//攻撃、+0欄に修正を記入\nAL+{命中値}+0　近・命中\n" + \
-                      "AL+{電脳値}+0　遠・電脳\n"
+                                       "C({HP}-YY)　残りHP\n" + \
+                                       "C({MP}-YY)　残りMP\n\n" + \
+                                       "//防御、+0欄に修正を記入\nAL+{回避値}+0　近・回避\n" + \
+                                       "AL+{防壁値}+0　遠・防壁\n" + \
+                                       "C(XX-{}-0)　被ダメージ、{}内に防御属性3文字\n\n" + \
+                                       "//攻撃、+0欄に修正を記入\nAL+{命中値}+0　近・命中\n" + \
+                                       "AL+{電脳値}+0　遠・電脳\n"
 
         if self.outfits_main_weapon_shortname != "":
             commandtext = commandtext + "2d6+" + outfits_main_weapon_shortattack_array[1] + "+0　" + \
@@ -758,11 +751,11 @@ class GuardianData():
                           self.outfits_sub_weapon_longname + "ダメージ\n"
 
         commandtext = commandtext + "\n//能力値判定\nAL+{体力B}+0　体力判定\n" + \
-                      "AL+{反射B}+0　反射判定\n" + \
-                      "AL+{知覚B}+0　知覚判定\n" + \
-                      "AL+{理知B}+0　理知判定\n" + \
-                      "AL+{意志B}+0　意志判定\n" + \
-                      "AL+{幸運B}+0　幸運判定"
+                                     "AL+{反射B}+0　反射判定\n" + \
+                                     "AL+{知覚B}+0　知覚判定\n" + \
+                                     "AL+{理知B}+0　理知判定\n" + \
+                                     "AL+{意志B}+0　意志判定\n" + \
+                                     "AL+{幸運B}+0　幸運判定"
 
         jsontext["data"]["commands"] = commandtext
         jsontext["data"]["externalUrl"] = self.url
@@ -775,11 +768,11 @@ class GuardianData():
 
     def output_prompt_guardian(self, image_type="人型ロボット"):
         text = "文字を描くことなく、以下の特徴を持つ" + image_type + "の全身像を描いてください。 " + \
-               "背景：白 カラーリング：自由 " + \
-               "右腕武装：" + self.outfits_main_weapon_shortname + " " + \
-               "左腕武装：" + self.outfits_sub_weapon_shortname + " " + \
-               "右肩武装：" + self.outfits_main_weapon_longname + " " + \
-               "左肩武装：" + self.outfits_sub_weapon_longname
+        "背景：白 カラーリング：自由 " + \
+        "右腕武装：" + self.outfits_main_weapon_shortname + " " + \
+        "左腕武装：" + self.outfits_sub_weapon_shortname + " " + \
+        "右肩武装：" + self.outfits_main_weapon_longname + " " + \
+        "左肩武装：" + self.outfits_sub_weapon_longname
         file_name = self.guardian_name + "_エネミープロンプトデータ.txt"
 
         f = open(file_name, 'w', encoding="utf-8")
@@ -787,7 +780,6 @@ class GuardianData():
         f.close()
 
         print("エネミープロンプトデータを生成しました")
-
 
 def get_data(level=3, guardian_type="ソロ", guardian_class="ミーレス（テクノメック）", weapon_var=[],
              short_weapon_num="1", long_weapon_num="1"):
@@ -825,7 +817,7 @@ def get_data(level=3, guardian_type="ソロ", guardian_class="ミーレス（テ
     else:
         guardian.output_prompt_guardian(image_type="機械モンスター")
 
-    # guardian.output_online_json_data()
+    #guardian.output_online_json_data()
 
     tkinter.messagebox.showinfo(title="完了", message="駒データを生成しました")
 
@@ -950,8 +942,7 @@ if __name__ == "__main__":
     ComboBox4.current(str(longrnd))
     ComboBox4.pack()
 
-    Button1 = tkinter.Button(frame13, text=u'生成', command=lambda: [
-        get_data(int(EditBox.get()), ComboBox1.get(), ComboBox2.get(), checkBoxVars, ComboBox3.get(), ComboBox4.get())])
+    Button1 = tkinter.Button(frame13, text=u'生成', command=lambda: [get_data(int(EditBox.get()), ComboBox1.get(), ComboBox2.get(), checkBoxVars, ComboBox3.get(), ComboBox4.get())])
     Button1.pack()
 
     # ボタン

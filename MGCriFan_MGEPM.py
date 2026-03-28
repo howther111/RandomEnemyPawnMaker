@@ -589,7 +589,7 @@ class GuardianData():
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][5]["label"] = "幸運基本値"
-        jsontext["data"]["params"][5]["value"] = str(self.bllesing_bonus)
+        jsontext["data"]["params"][5]["value"] = str(self.bllesing_total)
 
         jsontext["data"]["params"].append({})
         jsontext["data"]["params"][6]["label"] = "体力B"
